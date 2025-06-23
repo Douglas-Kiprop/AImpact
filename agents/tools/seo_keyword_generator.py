@@ -57,8 +57,7 @@ def generate_seo_keywords(**kwargs) -> SeoKeywordGeneratorOutputs:
     headers = {
         "Content-Type": "application/json"
     }
-    if n8n_api_key:
-        headers["SEO-N8N-API-KEY"] = n8n_api_key
+    # Removed API key from headers as authorization is no longer required
 
     try:
         response = requests.post(n8n_webhook_url, json=payload, headers=headers, timeout=60)
