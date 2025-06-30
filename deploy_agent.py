@@ -1,19 +1,15 @@
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
+import vertexai
+from vertexai import agent_engines
+from vertexai.preview.reasoning_engines import AdkApp
 from google.adk.agents import Agent
 from google.adk.tools import FunctionTool
-from vertexai.preview.reasoning_engines import AdkApp # Corrected import for AdkApp
-
-from agents.tools import seo_keyword_generator_tool
-from agents.tools.lead_nurturing_tool import lead_nurturing_tool
-from agents.tools.youtube_to_twitter_thread_generator import generate_twitter_threads
-from agents.tools.reddit_content_idea_scraper import get_reddit_content_ideas
 
 # Load .env file (ensure it's in the correct location)
 load_dotenv()
-# Debug: Print the API key to verify it's loaded correctly
-# print("GOOGLE_GENERATIVEAI_API_KEY:", os.getenv("GOOGLE_GENERATIVEAI_API_KEY")) # Removed this line
+
 # Configure Gemini API key globally (once)
 api_key = os.getenv("GOOGLE_GENERATIVEAI_API_KEY")
 if not api_key:
@@ -39,21 +35,25 @@ class GeminiClient:
 # Create a Gemini client instance
 gemini_client = GeminiClient()
 
+# Import your tools (assuming they are in the 'tools' directory relative to the project root)
+from agents.tools import seo_keyword_generator # Assuming this is the function, not the tool object
+from agents.tools.lead_nurturing_tool import lead_nurturing_tool
+from agents.tools.youtube_to_twitter_thread_generator import generate_twitter_threads
+from agents.tools.reddit_content_idea_scraper import get_reddit_content_ideas
+
+# Define your AImpactSuperAgent class (as it is in aimpact_super_agent.py)
 class AImpactSuperAgent(Agent):
     def __init__(
         self,
         tools: list[FunctionTool] | None = None,
-        # The model parameter for Agent is typically a string (model name)
-        # The actual prediction logic will use the gemini_client instance
     ):
         super().__init__(
-            model=DEFAULT_GEMINI_MODEL, # Use the default model name here
+            model=DEFAULT_GEMINI_MODEL,
             tools=tools or [
-                seo_keyword_generator_tool,
+                FunctionTool(seo_keyword_generator.generate_seo_keywords), # Assuming generate_seo_keywords is the function
                 lead_nurturing_tool,
                 generate_twitter_threads,
                 get_reddit_content_ideas,
-                # If you want to expose Gemini's prediction as a tool, you can add it here:
                 # FunctionTool(gemini_client.predict, name="gemini_predict", description="Generates text using the Gemini model.")
             ],
             name="AImpactSuperAgent",
@@ -88,8 +88,27 @@ class AImpactSuperAgent(Agent):
             ),
         )
 
+# Initialize Vertex AI SDK
+vertexai.init(
+    project="aimpact-462807",  # <--- REPLACED WITH YOUR PROJECT ID
+    location="us-central1",     # <--- REPLACED WITH YOUR REGION (e.g., "us-central1")
+    staging_bucket="gs://aimpact-462807_bucket",
+)
+
 # Create an AdkApp instance with the agent
 app = AdkApp(agent=AImpactSuperAgent())
 
-if __name__ == "__main__":
-    app.run()
+# Deploy the agent
+remote_agent = agent_engines.create(
+    app,
+    requirements=[
+        "google-cloud-aiplatform[agent_engines,adk]",
+        "python-dotenv",
+        "requests",
+        "google-generativeai"
+    ],
+    
+)
+
+print(f"Agent deployment initiated. Resource name: {remote_agent.resource_name}")
+print("You can monitor the deployment status in the Google Cloud Console.")
