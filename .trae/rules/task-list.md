@@ -130,3 +130,10 @@
 - [ ] Version Control (Git): Initialize repository, commit regularly.
 - [ ] Dependency Management.
 - [ ] Regular review and refactoring.
+
+
+Step 2: Configure Frontend to Talk to Local Flask Backend
+
+Once your frontend is running locally, you'll need to modify its code to send API requests to your local Flask backend. Your Flask backend is currently running on http://localhost:8080 and the endpoint for querying the agent is /query-agent.
+
+I'll need to see how your frontend currently makes API calls to guide you on this. Could you please provide the relevant code snippet from your frontend that handles API requests? For example, if it's a React app, it might be in a component that makes a fetch or axios call.

@@ -17,7 +17,7 @@ if not api_key:
 genai.configure(api_key=api_key)
 
 # Standardized, non-deprecated default model
-DEFAULT_GEMINI_MODEL = "gemini-1.5-flash-latest"
+DEFAULT_GEMINI_MODEL = "gemini-2.0-flash-001"
 
 class GeminiClient:
     def __init__(self, model_name: str = None):
@@ -105,9 +105,11 @@ remote_agent = agent_engines.create(
         "google-cloud-aiplatform[agent_engines,adk]",
         "python-dotenv",
         "requests",
-        "google-generativeai"
+        "google-generativeai",
+        "pydantic",
+        "cloudpickle"
     ],
-    
+    extra_packages=["agents"]
 )
 
 print(f"Agent deployment initiated. Resource name: {remote_agent.resource_name}")

@@ -21,7 +21,7 @@ if not api_key:
 genai.configure(api_key=api_key)
 
 # Standardized, non-deprecated default model
-DEFAULT_GEMINI_MODEL = "gemini-1.5-flash-latest"
+DEFAULT_GEMINI_MODEL = "gemini-1.5-flash"
 
 class GeminiClient:
     def __init__(self, model_name: str = None):
