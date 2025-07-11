@@ -137,3 +137,46 @@ Step 2: Configure Frontend to Talk to Local Flask Backend
 Once your frontend is running locally, you'll need to modify its code to send API requests to your local Flask backend. Your Flask backend is currently running on http://localhost:8080 and the endpoint for querying the agent is /query-agent.
 
 I'll need to see how your frontend currently makes API calls to guide you on this. Could you please provide the relevant code snippet from your frontend that handles API requests? For example, if it's a React app, it might be in a component that makes a fetch or axios call.
+
+
+ICP Tasks
+
+1. Fix System prompt
+2. Fix UI to visualize tool invokation
+3. Fix UI chat component to accept different types of input not just text even mermaid diagrams
+4. After everything works end to end Pull the UI repo and start building for ICP
+
+****
+
+5. Use ICP’s Canisters
+- Write smart contracts in Motoko (ICP’s native language) or Rust.
+
+- Deploy them as canisters to handle:
+
+- Logging user requests/responses.
+
+- Managing stateful conversations.
+
+- Integrating decentralized payments if needed.
+
+- Example: Have a canister that:
+
+- Receives user messages.
+
+- Stores them immutably.
+
+- Responds with metadata or calls your AI API off-chain.
+
+6. Add Internet Identity
+Replace traditional login flows with Internet Identity:
+
+- Increases security.
+
+- Shows your app is truly decentralized.
+
+- No passwords → less friction for users → better UX → more impressive demo.
+
+7. Monetize via ICP
+Use ICP tokens in your pitch: e.g., pay-per-use or subscription payments using ICP or ckBTC on the Internet Computer.
+
+8.

@@ -20,3 +20,7 @@ venv/
 # Operating System files
 .DS_Store
 thumbs.db
+
+# Deployment files
+deploy_agent.py
+
