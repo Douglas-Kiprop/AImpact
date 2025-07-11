@@ -40,7 +40,7 @@ def generate_seo_keywords(**kwargs) -> SeoKeywordGeneratorOutputs:
         return SeoKeywordGeneratorOutputs(keywords=[], explanation=f"Error parsing inputs: {e}")
 
     n8n_webhook_url = os.getenv("N8N_SEO_WEBHOOK_URL")
-    n8n_api_key = os.getenv("N8N_SEO_WEBHOOK_API_KEY") # For authenticated webhooks
+    #n8n_api_key = os.getenv("N8N_SEO_WEBHOOK_API_KEY") # For authenticated webhooks
 
     if not n8n_webhook_url:
         raise ValueError("N8N_SEO_WEBHOOK_URL environment variable is not set.")

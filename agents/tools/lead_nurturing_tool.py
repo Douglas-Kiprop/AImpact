@@ -1,5 +1,5 @@
 import os
-import httpx
+import httpx # Keep httpx for async
 from pydantic import BaseModel, Field
 from typing import Literal
 from google.adk.tools import FunctionTool
@@ -33,7 +33,7 @@ async def send_lead_for_nurturing(
     Sends lead information to an n8n webhook to initiate an AI-powered email nurturing sequence.
     """
     webhook_url = os.getenv("N8N_LEADNURTURE_WEBHOOK_URL")
-    api_key = os.getenv("N8N_LEADNURTURE_WEBHOOK_API_KEY")
+    # api_key = os.getenv("N8N_LEADNURTURE_WEBHOOK_API_KEY") # <--- REMOVE OR COMMENT OUT THIS LINE if no API key is used
 
     if not webhook_url:
         return LeadNurturingOutputs(status="failure", message="N8N_LEADNURTURE_WEBHOOK_URL environment variable is not set.")
@@ -48,13 +48,16 @@ async def send_lead_for_nurturing(
         "Lead Source": lead_source,
     }
 
-    headers = {
-        "Authorization": api_key,
-    }
+    # You don't need to explicitly set Content-Type: application/json here if using json=payload
+    # httpx will handle it automatically.
+    # headers = {
+    #     "Content-Type": "application/json"
+    # }
     
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(webhook_url, data=payload, headers=headers, timeout=30.0)
+            # CHANGE 'data=payload' to 'json=payload'
+            response = await client.post(webhook_url, json=payload, timeout=30.0)
             response.raise_for_status()  # Raise an exception for 4xx or 5xx status codes
 
         return LeadNurturingOutputs(status="success", message=f"Lead information sent successfully. Response: {response.text}")
